@@ -5,8 +5,10 @@ import SignUp from "./pages/auth-signUp";
 import Todo from "./pages/main-todo";
 import axios from "axios";
 
+// axios Config
+axios.defaults.baseURL = "http://localhost:8080";
+
 function App() {
-  axios.defaults.baseURL = "http://localhost:8080";
   return (
     <div className="App">
       <BrowserRouter>

@@ -35,7 +35,10 @@ function SignIn() {
     };
     axios
       .post("/users/login", data)
-      .then((res) => (res.status === 200 ? success(res) : fail(res)));
+      .then((res) => {
+        if (res.status === 200) success(res);
+      })
+      .catch((error) => fail(error));
   }
 
   // handleSubmitBtn() : 로그인 입력값 유효성검사 (각각 1자 이상 입력)
@@ -54,9 +57,8 @@ function SignIn() {
   }
 
   // 로그인 실패 시
-  function fail(res) {
-    alert(res.data.message);
-    navigate("/auth/signin");
+  function fail(error) {
+    alert(error.response.data.details);
   }
 
   useEffect(init, [navigate]);
@@ -80,6 +82,7 @@ function SignIn() {
         <button type="submit" disabled={canSubmit}>
           로그인
         </button>
+        <button onClick={() => navigate("/auth/signup")}>SIGN UP</button>
       </form>
     </>
   );

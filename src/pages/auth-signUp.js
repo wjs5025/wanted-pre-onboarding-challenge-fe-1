@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 function SignUp() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [canSubmit, setSubmit] = useState(true);
@@ -33,7 +35,23 @@ function SignUp() {
       email: email,
       password: password,
     };
-    axios.post("/users/create", data).then((res) => console.log(res));
+    axios
+      .post("/users/create", data)
+      .then((res) => {
+        if (res.status === 200) success(res);
+      })
+      .catch((error) => fail(error));
+  }
+
+  // 회원가입 성공 시
+  function success(res) {
+    alert(res.data.message);
+    navigate("/auth/signin");
+  }
+
+  // 회원가입 실패 시
+  function fail(error) {
+    alert(error.response.data.details);
   }
 
   useEffect(handleSubmitBtn, [email, password]);
