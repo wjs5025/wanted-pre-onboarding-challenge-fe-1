@@ -5,10 +5,13 @@ function Todo() {
   const navigate = useNavigate();
 
   function init() {
-    if (localStorage.getItem("token") === null) navigate("/auth/signin");
+    if (localStorage.getItem("token") === null) {
+      navigate("/auth/signin");
+      alert("토큰이 유효하지 않습니다.");
+    }
   }
 
-  useEffect(init, [navigate]);
+  useEffect(init);
   return <div>main-todo</div>;
 }
 
