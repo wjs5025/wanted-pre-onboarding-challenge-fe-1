@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import SignIn from "./pages/auth-signIn";
+import SignUp from "./pages/auth-signUp";
+import Todo from "./pages/main-todo";
+import axios from "axios";
 
 function App() {
+  axios.defaults.baseURL = "http://localhost:8080";
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Todo />} />
+          <Route path="/auth/:signup" element={<SignUp />} />
+          <Route exact path="/auth/signin" element={<SignIn />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
