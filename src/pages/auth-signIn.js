@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import styled from "styled-components";
+import Navigation from "../components/main-navigation";
 
 function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [canSubmit, setSubmit] = useState(true);
+  const [cantSubmit, setSubmit] = useState(true);
 
   // 최초 로직
   function init() {
@@ -55,7 +57,9 @@ function SignIn() {
   useEffect(handleSubmitBtn, [email, password]);
 
   return (
-    <>
+    <SignInContainer>
+      <Navigation />
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -69,13 +73,74 @@ function SignIn() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" disabled={canSubmit}>
+        <button
+          type="submit"
+          disabled={cantSubmit}
+          className={cantSubmit ? "none-hover" : ""}
+        >
           로그인
         </button>
-        <button onClick={() => navigate("/auth/signup")}>SIGN UP</button>
+        <div className="signup" onClick={() => navigate("/auth/signup")}>
+          SIGN UP
+        </div>
       </form>
-    </>
+    </SignInContainer>
   );
 }
 
+const SignInContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+
+  form {
+    margin: auto;
+    justify-content: center;
+    width: 300px;
+    height: calc(100vh - 54px);
+    display: flex;
+    flex-direction: column;
+
+    .none-hover {
+      pointer-events: none;
+    }
+
+    button {
+      height: 35px;
+      margin: 5px 0;
+      border: none;
+      transition: all 0.2s;
+
+      :hover {
+        cursor: pointer;
+        background-color: #5c1de3;
+        color: white;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      }
+    }
+
+    input {
+      height: 35px;
+      padding: 0 10px;
+      margin: 5px 0;
+      border: 1px solid #f1f1f1;
+
+      :focus {
+        outline: #5c1de3 2px solid;
+      }
+    }
+
+    .signup {
+      margin-top: 20px;
+      text-align: center;
+      color: gray;
+      font-size: 0.8em;
+      transition: all 0.2s;
+
+      :hover {
+        cursor: pointer;
+        color: #5c1de3;
+      }
+    }
+  }
+`;
 export default SignIn;

@@ -15,7 +15,11 @@ function Navigation() {
     <NavigationContainer>
       <h1>
         MyTodos
-        <button onClick={signOut}>로그아웃</button>
+        {localStorage.getItem("token") ? (
+          <button onClick={signOut}>로그아웃</button>
+        ) : (
+          <></>
+        )}
       </h1>
     </NavigationContainer>
   );
@@ -23,7 +27,7 @@ function Navigation() {
 
 ////////////////////////////////////////////Styled-Components
 const NavigationContainer = styled.div`
-  background-color: #3209db;
+  background-color: #5c1de3;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   color: white;
   position: relative;
@@ -37,6 +41,17 @@ const NavigationContainer = styled.div`
   button {
     position: absolute;
     right: 10px;
+    border: none;
+    padding: none;
+    line-height: 24px;
+    background-color: #5c1de3;
+    color: gray;
+    transition: all 0.2s;
+
+    :hover {
+      cursor: pointer;
+      color: white;
+    }
   }
 `;
 

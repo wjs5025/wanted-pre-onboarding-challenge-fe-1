@@ -2,9 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import TodoList from "../components/main-todoList";
-import TodoDetail from "../components/main-todoDatail";
+import TodoDetail from "../components/main-todoDetail";
 import styled from "styled-components";
 import Navigation from "../components/main-navigation";
+import NoTodos from "../components/main-noTodos";
 
 function Todo() {
   const navigate = useNavigate();
@@ -28,7 +29,9 @@ function Todo() {
     const config = {
       headers: { Authorization: localStorage.getItem("token") },
     };
-    axios.post("/todos", data, config).then((res) => console.log(res));
+    axios.post("/todos", data, config).then((res) => selectTodo(res.data.data));
+    setTitle("");
+    setContent("");
     getTodos();
   }
 
@@ -53,6 +56,7 @@ function Todo() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Todo의 제목을 입력하세요"
+            maxLength={50}
           />
           <input
             type="text"
@@ -61,15 +65,32 @@ function Todo() {
             placeholder="Todo의 내용을 입력하세요"
           />
         </div>
-        <button type="submit">ADD</button>
+        <button className="submit" type="submit">
+          ADD
+        </button>
       </form>
       <div className="read-todo">
-        <div className="todo-list">
-          <TodoList todos={todos} selectTodo={selectTodo} />
-        </div>
-        <div className="todo-detail">
-          <TodoDetail todos={todos} selectedTodo={selectedTodo} />
-        </div>
+        {/* Todo가 없을 때 / 있을 때*/}
+        {todos.length === 0 ? (
+          <NoTodos />
+        ) : (
+          <>
+            <div className="todo-list">
+              <TodoList
+                todos={todos}
+                selectedTodo={selectedTodo}
+                selectTodo={selectTodo}
+              />
+            </div>
+            <div className="todo-detail">
+              <TodoDetail
+                selectedTodo={selectedTodo}
+                getTodos={getTodos}
+                selectTodo={selectTodo}
+              />
+            </div>
+          </>
+        )}
       </div>
     </TodoContainer>
   );
@@ -79,17 +100,45 @@ function Todo() {
 const TodoContainer = styled.div`
   .add-todo {
     display: flex;
-    margin: 10px;
+    margin: 20px 30px;
 
     .input {
       width: 100%;
       display: flex;
       flex-direction: column;
+
+      input {
+        margin-top: 5px;
+        margin-right: 5px;
+        height: 2em;
+        border: 1px solid #f1f1f1;
+        padding: 0 10px;
+
+        :focus {
+          outline: #5c1de3 2px solid;
+        }
+      }
+    }
+
+    .submit {
+      margin-top: 5px;
+      min-width: 70px;
+      min-height: 45px;
+      border: none;
+      transition: all 0.2s;
+
+      :hover {
+        cursor: pointer;
+        background-color: #5c1de3;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+        color: white;
+      }
     }
   }
 
   .read-todo {
-    margin: 0 10px;
+    margin: 0 30px;
     display: flex;
   }
 
