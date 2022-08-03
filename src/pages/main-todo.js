@@ -47,14 +47,15 @@ function Todo() {
     const config = {
       headers: { Authorization: localStorage.getItem("token") },
     };
-    axios
-      .get("/todos", config)
-      .then((res) => setTodos(res.data.data.reverse()));
+    axios.get("/todos", config).then((res) => {
+      setTodos(res.data.data.reverse());
+      selectByURL();
+    });
   }
 
   useEffect(getTodos, []);
   useEffect(init, [navigate]);
-  useEffect(selectByURL, [location]);
+  useEffect(selectByURL, [location, todos]);
 
   return (
     <TodoContainer>

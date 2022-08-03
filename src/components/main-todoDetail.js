@@ -11,6 +11,7 @@ function TodoDetail(props) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
+
   // init() : 최초 로직
   function init() {
     if (nowSelect !== undefined) {
@@ -61,6 +62,8 @@ function TodoDetail(props) {
     console.log("삭제완료");
     props.getTodos();
     selectTodo([{ title: "", content: "" }]);
+    setTitle("");
+    setContent("");
     navigate("/0");
   }
 
