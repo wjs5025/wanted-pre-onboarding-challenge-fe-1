@@ -8,16 +8,6 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [canSubmit, setSubmit] = useState(true);
 
-  // handleEmail() : 이메일 입력 이벤트 처리 함수
-  function handleEmail(e) {
-    setEmail(e.target.value);
-  }
-
-  // handlePassword() : 비밀번호 입력 이벤트 처리 함수
-  function handlePassword(e) {
-    setPassword(e.target.value);
-  }
-
   // handleSubmitBtn() : 회원가입 입력값 유효성검사 (이메일 : @ . 포함 / 비밀번호 : 8자 이상)
   function handleSubmitBtn() {
     const emailRegExp = /[0-9a-zA-Z-_]+@[0-9a-zA-Z]+\.[a-zA-Z0-9]+/;
@@ -63,13 +53,13 @@ function SignUp() {
           type="email"
           placeholder="email"
           value={email}
-          onChange={handleEmail}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="password"
           value={password}
-          onChange={handlePassword}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" disabled={canSubmit}>
           회원가입

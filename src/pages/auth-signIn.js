@@ -15,16 +15,6 @@ function SignIn() {
     }
   }
 
-  // handleEmail() : 이메일 입력 이벤트 처리 함수
-  function handleEmail(e) {
-    setEmail(e.target.value);
-  }
-
-  // handlePassword() : 비밀번호 입력 이벤트 처리 함수
-  function handlePassword(e) {
-    setPassword(e.target.value);
-  }
-
   // handleSubmit() : 로그인 제출 버튼
   function handleSubmit(e) {
     e.preventDefault();
@@ -71,13 +61,13 @@ function SignIn() {
           type="email"
           placeholder="email"
           value={email}
-          onChange={handleEmail}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="password"
           value={password}
-          onChange={handlePassword}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" disabled={canSubmit}>
           로그인

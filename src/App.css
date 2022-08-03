@@ -1,7 +1,21 @@
 .App {
   margin: auto;
-  text-align: center;
-  background-color: blue;
   max-width: 600px;
   min-width: 360px;
+  height: 100vh;
+  box-shadow: rgb(219 219 219) 0px 0px 10px;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
