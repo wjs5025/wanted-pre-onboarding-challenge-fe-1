@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import TodoList from "../components/main-todoList";
 import TodoDetail from "../components/main-todoDetail";
 import styled from "styled-components";
@@ -12,7 +12,8 @@ function Todo() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [todos, setTodos] = useState([]);
-  const [selectedTodo, selectTodo] = useState([]);
+  const [nowSelect, selectTodo] = useState([{ title: "", contnet: "" }]);
+  const location = useLocation();
 
   // 최초 로직
   function init() {
@@ -22,6 +23,11 @@ function Todo() {
     }
   }
 
+  // selectByURL() : URL의 Todo id에 해당하는 Todo를 선택
+  function selectByURL() {
+    selectTodo(todos.find((el) => "/" + el.id === location.pathname));
+  }
+
   // handleSubmit() : Todo 추가 제출 버튼
   function handleSubmit(event) {
     event.preventDefault();
@@ -29,7 +35,7 @@ function Todo() {
     const config = {
       headers: { Authorization: localStorage.getItem("token") },
     };
-    axios.post("/todos", data, config).then((res) => selectTodo(res.data.data));
+    axios.post("/todos", data, config).then((res) => console.log(res));
     setTitle("");
     setContent("");
     getTodos();
@@ -37,14 +43,18 @@ function Todo() {
 
   // getTodos() : Todo 목록을 가져오는 통신 처리 함수
   function getTodos() {
+    console.log("getTodos()");
     const config = {
       headers: { Authorization: localStorage.getItem("token") },
     };
-    axios.get("/todos", config).then((res) => setTodos(res.data.data));
+    axios
+      .get("/todos", config)
+      .then((res) => setTodos(res.data.data.reverse()));
   }
 
-  useEffect(init, [navigate]);
   useEffect(getTodos, []);
+  useEffect(init, [navigate]);
+  useEffect(selectByURL, [location]);
 
   return (
     <TodoContainer>
@@ -76,16 +86,12 @@ function Todo() {
         ) : (
           <>
             <div className="todo-list">
-              <TodoList
-                todos={todos}
-                selectedTodo={selectedTodo}
-                selectTodo={selectTodo}
-              />
+              <TodoList todos={todos} />
             </div>
             <div className="todo-detail">
               <TodoDetail
-                selectedTodo={selectedTodo}
                 getTodos={getTodos}
+                nowSelect={nowSelect}
                 selectTodo={selectTodo}
               />
             </div>

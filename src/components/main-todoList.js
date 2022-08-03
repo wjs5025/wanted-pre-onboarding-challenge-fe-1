@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 
 function TodoList(props) {
+  const location = useLocation();
   const todos = props.todos;
-  const selectTodo = props.selectTodo; //function
+  const navigate = useNavigate();
 
   return (
     <TodoListContainer>
@@ -13,10 +15,10 @@ function TodoList(props) {
           <Todo
             key={el.id}
             onClick={() => {
-              selectTodo(el);
+              navigate("/" + el.id);
             }}
             BackGroundColor={
-              props.selectedTodo === el ? "rgba(92, 29, 227,0.05)" : ""
+              location.pathname === "/" + el.id ? "rgba(92, 29, 227,0.05)" : ""
             }
           >
             <p className="title">{el.title}</p>

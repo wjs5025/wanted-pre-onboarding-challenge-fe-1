@@ -1,22 +1,27 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 
 function TodoDetail(props) {
-  const selectedTodo = props.selectedTodo; // Object
-  const selectTodo = props.selectTodo; // function
-  const date =
-    selectedTodo.updatedAt === selectedTodo.createdAt
-      ? selectedTodo.updatedAt
-      : selectedTodo.createdAt;
+  const nowSelect = props.nowSelect;
+  const selectTodo = props.selectTodo;
+  const navigate = useNavigate();
   const [modifyMode, setModifyMode] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+  const [date, setDate] = useState("");
   // init() : 최초 로직
   function init() {
-    setTitle(selectedTodo.title);
-    setContent(selectedTodo.content);
+    if (nowSelect !== undefined) {
+      setTitle(nowSelect.title);
+      setContent(nowSelect.content);
+      setDate(
+        nowSelect.createdAt === nowSelect.updatedAt
+          ? nowSelect.createdAt?.slice(0, 10)
+          : nowSelect.updatedAt?.slice(0, 10)
+      );
+    }
   }
 
   // modifyTodo() : Todo 수정 제출 버튼
@@ -27,13 +32,12 @@ function TodoDetail(props) {
     };
 
     axios
-      .put("/todos/" + selectedTodo.id, data, config)
+      .put("/todos/" + nowSelect.id, data, config)
       .then((res) => {
         console.log("수정완료", res);
         if (res.status === 200) {
           props.getTodos();
           setModifyMode(false);
-          selectTodo(res.data.data);
         }
       })
       .catch((error) => fail(error));
@@ -45,9 +49,8 @@ function TodoDetail(props) {
       headers: { Authorization: localStorage.getItem("token") },
     };
     axios
-      .delete("/todos/" + selectedTodo.id, config)
+      .delete("/todos/" + nowSelect.id, config)
       .then((res) => {
-        console.log("삭제완료", res);
         if (res.status === 200) success(res);
       })
       .catch((error) => fail(error));
@@ -55,7 +58,10 @@ function TodoDetail(props) {
 
   // 통신 성공 시
   function success() {
+    console.log("삭제완료");
     props.getTodos();
+    selectTodo([{ title: "", content: "" }]);
+    navigate("/0");
   }
 
   // 통신 실패 시
@@ -63,7 +69,7 @@ function TodoDetail(props) {
     alert(error.response.data.details);
   }
 
-  useEffect(init, [selectedTodo]);
+  useEffect(init, [nowSelect]);
 
   return (
     <TodoDetailContainer>
@@ -89,7 +95,7 @@ function TodoDetail(props) {
           <p className="content">{content}</p>
         )}
         <div className="bottom">
-          <p className="date">{date?.slice(0, 10)}</p>
+          <p className="date">{date}</p>
           <div className="menu">
             {/* 버튼 : 수정모드 일 때 (취소, 완료) / 아닐 때 (수정, 삭제) */}
             {modifyMode ? (

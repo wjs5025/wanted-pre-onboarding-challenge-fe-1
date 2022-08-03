@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Todo />} />
+          <Route path="/:todoid" element={<Todo />} />
           <Route path="/auth/:signup" element={<SignUp />} />
           <Route exact path="/auth/signin" element={<SignIn />} />
         </Routes>

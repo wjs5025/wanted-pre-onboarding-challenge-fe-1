@@ -13,7 +13,7 @@ function SignIn() {
   // 최초 로직
   function init() {
     if (localStorage.getItem("token")) {
-      navigate("/");
+      navigate("/0");
     }
   }
 
