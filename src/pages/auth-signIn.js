@@ -10,7 +10,7 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [cantSubmit, setSubmit] = useState(true);
 
-  // 최초 로직
+  // init() : 초기화
   function init() {
     if (localStorage.getItem("token")) {
       navigate("/0");

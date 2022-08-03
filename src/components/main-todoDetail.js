@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 
 function TodoDetail(props) {
   const nowSelect = props.nowSelect;
   const selectTodo = props.selectTodo;
+  const location = useLocation();
   const navigate = useNavigate();
   const [modifyMode, setModifyMode] = useState(false);
   const [title, setTitle] = useState("");
@@ -14,15 +15,18 @@ function TodoDetail(props) {
 
   // init() : 최초 로직
   function init() {
-    if (nowSelect !== undefined) {
-      setTitle(nowSelect.title);
-      setContent(nowSelect.content);
-      setDate(
-        nowSelect.createdAt === nowSelect.updatedAt
-          ? nowSelect.createdAt?.slice(0, 10)
-          : nowSelect.updatedAt?.slice(0, 10)
-      );
-    }
+    setTitle(nowSelect?.title);
+    setContent(nowSelect?.content);
+    setDate(
+      nowSelect?.createdAt === nowSelect?.updatedAt
+        ? nowSelect?.createdAt?.slice(0, 10)
+        : nowSelect?.updatedAt?.slice(0, 10)
+    );
+  }
+
+  function inModifyMode() {
+    setTitle(nowSelect?.title);
+    setContent(nowSelect?.content);
   }
 
   // modifyTodo() : Todo 수정 제출 버튼
@@ -60,8 +64,8 @@ function TodoDetail(props) {
   // 통신 성공 시
   function success() {
     console.log("삭제완료");
-    props.getTodos();
     selectTodo([{ title: "", content: "" }]);
+    props.getTodos();
     setTitle("");
     setContent("");
     navigate("/0");
@@ -73,6 +77,7 @@ function TodoDetail(props) {
   }
 
   useEffect(init, [nowSelect]);
+  useEffect(inModifyMode, [modifyMode, nowSelect]);
 
   return (
     <TodoDetailContainer>
@@ -85,7 +90,7 @@ function TodoDetail(props) {
             onChange={(e) => setTitle(e.target.value)}
           />
         ) : (
-          <h3 className="title">{title}</h3>
+          <h3 className="title">{nowSelect?.title}</h3>
         )}
         {/* 내용(content) : 수정모드 일 때 / 아닐 때 */}
         {modifyMode ? (
@@ -95,38 +100,48 @@ function TodoDetail(props) {
             onChange={(e) => setContent(e.target.value)}
           />
         ) : (
-          <p className="content">{content}</p>
+          <p className="content">{nowSelect?.content}</p>
         )}
         <div className="bottom">
           <p className="date">{date}</p>
-          <div className="menu">
-            {/* 버튼 : 수정모드 일 때 (취소, 완료) / 아닐 때 (수정, 삭제) */}
-            {modifyMode ? (
-              <>
-                <button
-                  className="modify"
-                  onClick={() => setModifyMode(!modifyMode)}
-                >
-                  취소
-                </button>
-                <button className="modify" onClick={modifyTodo}>
-                  완료
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  className="modify"
-                  onClick={() => setModifyMode(!modifyMode)}
-                >
-                  수정
-                </button>
-                <button className="delete" onClick={deleteTodo}>
-                  삭제
-                </button>
-              </>
-            )}
-          </div>
+          {location.pathname === "/0" ? (
+            <></>
+          ) : (
+            <div className="menu">
+              {/* 버튼 : 수정모드 일 때 (취소, 완료) / 아닐 때 (수정, 삭제) */}
+              {modifyMode ? (
+                <>
+                  <button
+                    className="modify"
+                    onClick={() => setModifyMode(!modifyMode)}
+                  >
+                    취소
+                  </button>
+                  <button className="modify" onClick={modifyTodo}>
+                    완료
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="modify"
+                    onClick={() => setModifyMode(!modifyMode)}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className="delete"
+                    onClick={() => {
+                      if (window.confirm("정말 삭제하시겠습니까?"))
+                        deleteTodo();
+                    }}
+                  >
+                    삭제
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </TodoDetailContainer>

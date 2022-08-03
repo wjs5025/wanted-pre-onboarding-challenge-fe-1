@@ -59,6 +59,7 @@ const Todo = styled.div`
     overflow: hidden;
     -webkit-box-orient: vertical;
     padding: 5px;
+    padding-bottom: 0;
     font-size: 0.9em;
     font-weight: bold;
     font-size: 0.8em;
@@ -68,7 +69,7 @@ const Todo = styled.div`
     -webkit-line-clamp: 3;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    margin: 0 5px;
+    margin: 5px;
     font-size: 0.8em;
   }
 `;

@@ -12,10 +12,10 @@ function Todo() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [todos, setTodos] = useState([]);
-  const [nowSelect, selectTodo] = useState([{ title: "", contnet: "" }]);
+  const [nowSelect, selectTodo] = useState([{ title: "", content: "" }]);
   const location = useLocation();
 
-  // 최초 로직
+  // init() : 초기화
   function init() {
     if (localStorage.getItem("token") === null) {
       navigate("/auth/signin");
@@ -25,7 +25,10 @@ function Todo() {
 
   // selectByURL() : URL의 Todo id에 해당하는 Todo를 선택
   function selectByURL() {
-    selectTodo(todos.find((el) => "/" + el.id === location.pathname));
+    if (todos.length !== 0) {
+      const todo = todos.find((el) => "/" + el.id === location.pathname);
+      selectTodo(todo);
+    }
   }
 
   // handleSubmit() : Todo 추가 제출 버튼
@@ -43,7 +46,6 @@ function Todo() {
 
   // getTodos() : Todo 목록을 가져오는 통신 처리 함수
   function getTodos() {
-    console.log("getTodos()");
     const config = {
       headers: { Authorization: localStorage.getItem("token") },
     };
